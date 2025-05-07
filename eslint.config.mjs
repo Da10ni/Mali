@@ -9,20 +9,8 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-// Extend Next.js core web vitals config
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
-  
-  // Additional rules
-  {
-    rules: {
-      // Disable 'import/no-anonymous-default-export' rule
-      "import/no-anonymous-default-export": "off",
-      
-      // Disable 'react/no-unescaped-entities' rule
-      "react/no-unescaped-entities": "off",
-    },
-  },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
 export default eslintConfig;
