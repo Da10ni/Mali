@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  password          String?
+  createdAt         DateTime @default(now())
+  username          String?  @unique
+  isVerified        Boolean  @default(false)
+  verificationToken String?
+  bio               String?
+  earn              String?
+  goals             String?
+  profilepicture    String?
+  displayname       String?  @unique
+  fullName          String?  @unique
+  phone             String?  @unique
+  instagramUsername String?
+  tiktokUsername    String?
+  categories        String[]
+  liketosell        String[]
+  links             String[]
+}
+
+// model UserProfile {
+//   id        Int      @id @default(autoincrement()) // Profile ID
+//   bio       String?  // User bio
+//   avatar    String?  // Avatar URL
+//   location  String?  // Optional location
+//   website   String?  // Optional website URL
+
+//   userId    Int      // Foreign key to User model
+//   user      User     @relation(fields: [userId], references: [id]) // One-to-one relationship with User
+// }
+
+
+
+model Store {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  description String?
+  products    Product[]
+}
+
+model Product {
+  id       Int     @id @default(autoincrement())
+  title    String
+  url      String?
+  imageUrl String?
+  storeId  Int
+  store    Store   @relation(fields: [storeId], references: [id])
+}
+
+model AppointmentBooking {
+  id             Int      @id @default(autoincrement())
+username String @unique(map: "appointment_booking_username_key")
+  availability   Json?
+  blockedDates   String[]
+  bookingDetails Json
+  title          String
+  description    String
+  price          String
+  timezone       String
+  bottomTitle    String
+  cardBgColor    String
+  cardTextColor  String
+  image          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  isbooked       Boolean  @default(false)
+}
+
+
+model BookingPage {
+  id          Int     @id @default(autoincrement())
+  email       String
+  username    String @unique
+  title       String
+  description String
+  price       String
+  bottomTitle String
+  image       String?
+  bookingpagebgcolor String?
+  bookingpagetextcolor String?
+  blockedDates   String[]
+  bookedslots   Json?
+  timeZone    String?
+}
+
+model AvailableSlot {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  startTime     DateTime
+  endTime       DateTime
+  bookingUserId Int 
+}
+
+model Booking {
+  id            Int           @id @default(autoincrement())
+  bookingUserId Int
+  customerEmail String
+  customerName  String
+  paymentId     String?
+  createdAt     DateTime      @default(now())
+  payment       Payment?
+}
+
+model Payment {
+  id              Int      @id @default(autoincrement())
+  bookingId       Int      @unique
+  amount          Decimal
+  currency        String   @default("USD")
+  stripePaymentId String?
+  status          String
+  createdAt       DateTime @default(now())
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+}
+
